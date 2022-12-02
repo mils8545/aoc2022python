@@ -2,7 +2,7 @@ import easygui
 import time
 import math
 
-AOCDAY = "01"
+AOCDAY = "02"
 
 def readFile(fileName):
     # Reads the file at fileName and returns a list of lines stripped of newlines
@@ -15,34 +15,50 @@ def readFile(fileName):
 
 def part1(lines):
     # Code the solution to part 1 here, returning the answer as a string
-    total = 0
-    cals = []
+    pairs = []
+    scores = {"X": 1, "Y": 2, "Z": 3}
+    beats = {"X": "C", "Y": "A", "Z": "B"}
+    loses = {"X": "B", "Y": "C", "Z": "A"}
     for line in lines:
-        if line != "":
-            total += int(line)
+        pairs.append(line.split(" "))
+    score = 0
+    for pair in pairs:
+        score += scores[pair[1]]
+        if beats[pair[1]] == pair[0]:
+            score += 6
+        elif loses[pair[1]] == pair[0]:
+            score += 0
         else:
-            cals.append(total)
-            total = 0
-    cals.sort()
+            score += 3 
 
-    return(f"The elf with the most calories has {cals[-1]} calories in his bag.") 
+    return(f"The total score at the end is {score}.") 
 
 def part2(lines):
     # Code the solution to part 2 here, returning the answer as a string
     
-    # Code the solution to part 1 here, returning the answer as a string
-    total = 0
-    cals = []
-    for line in lines:
-        if line != "":
-            total += int(line)
-        else:
-            cals.append(total)
-            total = 0
-    cals.sort()
-    top_three = cals[-1]+cals[-2]+cals[-3]
+    pairs = []
+    scores = {"X": 1, "Y": 2, "Z": 3}
 
-    return(f"The three elves with the most calories have {top_three} calories in their bags.") 
+    beats = {"C": "X", "A": "Y", "B": "Z"}
+    loses = {"B": "X", "C": "Y", "A": "Z"}
+    ties = {"A": "X", "B": "Y", "C": "Z"}
+
+    for line in lines:
+        pairs.append(line.split(" "))
+    score = 0
+    for pair in pairs:
+        if pair[1] == "X":
+            choice = loses[pair[0]]
+        elif pair[1] == "Y":
+            choice = ties[pair[0]]
+            score += 3
+        else:
+            choice = beats[pair[0]]
+            score += 6
+        score += scores[choice]
+
+    return(f"The total score at the end is {score}.") 
+
 
 def main ():
     # Opens a dialog to select the input file
